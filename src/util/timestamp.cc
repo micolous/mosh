@@ -43,6 +43,8 @@
 #elif HAVE_GETTIMEOFDAY
  #include <sys/time.h>
  #include <stdio.h>
+#elif defined(WIN32)
+#include <Windows.h>
 #endif
 
 static uint64_t millis_cache = -1;
@@ -93,6 +95,19 @@ void freeze_timestamp( void )
     millis_cache = millis;
     return;
   }
+#elif defined(WIN32)
+	LARGE_INTEGER li;
+	BOOL ret = QueryPerformanceFrequency(&li);
+	if ( !ret ) {
+		perror( "QueryPerformanceFrequency" );
+	} else {
+		LARGE_INTEGER pc;
+		QueryPerformanceCounter(&pc);
+		uint64_t millis = pc.QuadPart / li.QuadPart * 1000 + pc.QuadPart % li.QuadPart * 1000 / li.QuadPart;
+		millis_cache = millis;
+		return;
+	}
+
 #else
 # error "Don't know how to get a timestamp on this platform"
 #endif

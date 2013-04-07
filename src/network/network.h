@@ -35,8 +35,13 @@
 
 #include <stdint.h>
 #include <deque>
+#ifdef WIN32
+#include <WinSock2.h>
+#include <Windows.h>
+#else
 #include <sys/socket.h>
 #include <netinet/in.h>
+#endif
 #include <string>
 #include <math.h>
 #include <vector>
@@ -106,7 +111,11 @@ namespace Network {
     class Socket
     {
     private:
+#ifdef WIN32
+		SOCKET _fd;
+#else
       int _fd;
+#endif
 
     public:
       int fd( void ) const { return _fd; }

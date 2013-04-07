@@ -39,26 +39,51 @@
 
 #include "crypto.h"
 
+#ifdef WIN32
+#include <WinCrypt.h>
+#else
 /* Read random bytes from /dev/urandom.
 
    We rely on stdio buffering for efficiency. */
 
 static const char rdev[] = "/dev/urandom";
-
+#endif
 using namespace Crypto;
 
 class PRNG {
  private:
+#ifdef WIN32
+	 HCRYPTPROV cryptProv;
+#else
   std::ifstream randfile;
+#endif
 
   /* unimplemented to satisfy -Weffc++ */
   PRNG( const PRNG & );
   PRNG & operator=( const PRNG & );
 
  public:
+#ifdef WIN32
+	 PRNG() {
+		 BOOL ret = CryptAcquireContext(&cryptProv, NULL, NULL, PROV_RSA_FULL, 0);
+		 if (!ret)
+			ret = CryptAcquireContext(&cryptProv, NULL, NULL, PROV_RSA_FULL, CRYPT_NEWKEYSET);
+		 if (!ret)
+		 {
+			 DWORD error = GetLastError();
+			 throw CryptoException( "Could not generate random data" );
+		 }
+	 }
+#else
   PRNG() : randfile( rdev, std::ifstream::in | std::ifstream::binary ) {}
+#endif
 
   void fill( void *dest, size_t size ) {
+#ifdef WIN32
+	  BOOL ret = ::CryptGenRandom(cryptProv, size, (BYTE*)&dest);
+	  if (!ret)
+		  throw CryptoException( "Could not generate random data" );
+#else
     if ( 0 == size ) {
       return;
     }
@@ -67,6 +92,7 @@ class PRNG {
     if ( !randfile ) {
       throw CryptoException( "Could not read from " + std::string( rdev ) );
     }
+#endif
   }
 
   uint8_t uint8() {

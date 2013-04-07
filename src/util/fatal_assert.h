@@ -43,9 +43,16 @@ static void fatal_error( const char *expression, const char *file, int line, con
   abort();
 }
 
+#ifdef WIN32
+#define fatal_assert(expr)						\
+  ((expr)								\
+   ? (void)0								\
+   : fatal_error (#expr, __FILE__, __LINE__, __FUNCTION__ ))
+#else
 #define fatal_assert(expr)						\
   ((expr)								\
    ? (void)0								\
    : fatal_error (#expr, __FILE__, __LINE__, __func__ ))
 
+#endif
 #endif

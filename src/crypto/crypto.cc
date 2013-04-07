@@ -35,7 +35,12 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <assert.h>
+#ifndef WIN32
 #include <sys/resource.h>
+#else
+#include <Windows.h>
+#include <wincrypt.h>
+#endif
 #include <fstream>
 
 #include "byteorder.h"
@@ -45,7 +50,43 @@
 using namespace std;
 using namespace Crypto;
 
+#ifndef WIN32
 const char rdev[] = "/dev/urandom";
+#endif
+
+#ifdef WIN32
+
+#pragma comment(lib, "advapi32.lib")
+void CryptographicallySafeRandom(size_t len, void* buffer)
+{
+	static bool initialized = false;
+	static HCRYPTPROV hCryptProv;
+
+	if (!initialized)
+	{
+		BOOL ret = CryptAcquireContext(&hCryptProv, NULL, NULL, PROV_RSA_FULL, 0);
+		if (!ret)
+			ret = CryptAcquireContext(&hCryptProv, NULL, NULL, PROV_RSA_FULL, CRYPT_NEWKEYSET);
+		if ( !ret ) {
+			throw CryptoException( "Could not generate random data" );
+		}
+	}
+	BOOL ret = ::CryptGenRandom(hCryptProv, len, reinterpret_cast<BYTE*>(buffer));
+	if ( !ret ) {
+	    throw CryptoException( "Could not generate random data" );
+	}
+}
+#else
+void CryptographicallySafeRandom(size_t len, void* buffer)
+{
+  ifstream devrandom( rdev, ifstream::in | ifstream::binary );
+
+  devrandom.read( reinterpret_cast<char *>( buffer ), sizeof( len ) );
+  if ( !devrandom ) {
+    throw CryptoException( "Could not read from " + string( rdev ) );
+  }
+}
+#endif
 
 long int myatoi( const char *str )
 {
@@ -122,12 +163,7 @@ Base64Key::Base64Key( string printable_key )
 
 Base64Key::Base64Key()
 {
-  ifstream devrandom( rdev, ifstream::in | ifstream::binary );
-
-  devrandom.read( reinterpret_cast<char *>( key ), sizeof( key ) );
-  if ( !devrandom ) {
-    throw CryptoException( "Could not read from " + string( rdev ) );
-  }
+	CryptographicallySafeRandom( sizeof( key ), key );
 }
 
 string Base64Key::printable_key( void ) const
@@ -290,11 +326,16 @@ Message Session::decrypt( string ciphertext )
   return ret;
 }
 
+#ifndef WIN32
 static rlim_t saved_core_rlimit;
+#endif
 
 /* Disable dumping core, as a precaution to avoid saving sensitive data
    to disk. */
 void Crypto::disable_dumping_core( void ) {
+#ifdef WIN32
+	// TODO: how to disable dumping core?
+#else
   struct rlimit limit;
   if ( 0 != getrlimit( RLIMIT_CORE, &limit ) ) {
     /* We don't throw CryptoException because this is called very early
@@ -309,13 +350,18 @@ void Crypto::disable_dumping_core( void ) {
     perror( "setrlimit(RLIMIT_CORE)" );
     exit( 1 );
   }
+#endif
 }
 
 void Crypto::reenable_dumping_core( void ) {
+#ifdef WIN32
+	// TODO: how to re-enable dumping core?
+#else
   /* Silent failure is safe. */
   struct rlimit limit;
   if ( 0 == getrlimit( RLIMIT_CORE, &limit ) ) {
     limit.rlim_cur = saved_core_rlimit;
     setrlimit( RLIMIT_CORE, &limit );
   }
+#endif
 }

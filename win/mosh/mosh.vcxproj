@@ -1,0 +1,192 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{F33619C3-7517-4B3A-92B6-CE061D0A4A53}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>mosh</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>C:\OpenSSL-Win32\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\OpenSSL-Win32\lib\VC\static;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>C:\OpenSSL-Win32\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\OpenSSL-Win32\lib\VC\static;$(LibraryPath)</LibraryPath>
+    <TargetName>mosh-client</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\work\protobuf-2.5.0\vsprojects\include;.;../../src/util;zlib;../../src/crypto;..\..\src\protobufs;../../src/terminal;../../src/statesync;../../src/network</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>ws2_32.lib;libprotobuf.lib;zlib.lib;libeay32MTd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>D:\work\protobuf-2.5.0\vsprojects\Debug;zlib</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\work\protobuf-2.5.0\vsprojects\include;.;../../src/util;zlib;../../src/crypto;..\..\src\protobufs;../../src/terminal;../../src/statesync;../../src/network</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>D:\work\protobuf-2.5.0\vsprojects\Release;zlib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>ws2_32.lib;libprotobuf.lib;zlib.lib;libeay32MTd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\..\src\protobufs\hostinput.proto">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">protobuf\protoc --proto_path=$(ProjectDir)\..\..\src\protobufs --cpp_out=$(ProjectDir)\..\..\src\protobufs $(ProjectDir)\..\..\src\protobufs\%(Filename).proto</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectDir)\..\..\src\protobufs\%(Filename).pb.h;$(ProjectDir)\..\..\src\protobufs\%(Filename).pb.cc</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">protobuf\protoc --proto_path=$(ProjectDir)\..\..\src\protobufs --cpp_out=$(ProjectDir)\..\..\src\protobufs $(ProjectDir)\..\..\src\protobufs\%(Filename).proto</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectDir)\..\..\src\protobufs\%(Filename).pb.h;$(ProjectDir)\..\..\src\protobufs\%(Filename).pb.cc</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\protobufs\transportinstruction.proto">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">protobuf\protoc --proto_path=$(ProjectDir)\..\..\src\protobufs --cpp_out=$(ProjectDir)\..\..\src\protobufs $(ProjectDir)\..\..\src\protobufs\%(Filename).proto</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectDir)\..\..\src\protobufs\%(Filename).pb.h;$(ProjectDir)\..\..\src\protobufs\%(Filename).pb.cc</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">protobuf\protoc --proto_path=$(ProjectDir)\..\..\src\protobufs --cpp_out=$(ProjectDir)\..\..\src\protobufs $(ProjectDir)\..\..\src\protobufs\%(Filename).proto</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectDir)\..\..\src\protobufs\%(Filename).pb.h;$(ProjectDir)\..\..\src\protobufs\%(Filename).pb.cc</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\protobufs\userinput.proto">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">protobuf\protoc --proto_path=$(ProjectDir)\..\..\src\protobufs --cpp_out=$(ProjectDir)\..\..\src\protobufs $(ProjectDir)\..\..\src\protobufs\%(Filename).proto</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectDir)\..\..\src\protobufs\%(Filename).pb.h;$(ProjectDir)\..\..\src\protobufs\%(Filename).pb.cc</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">protobuf\protoc --proto_path=$(ProjectDir)\..\..\src\protobufs --cpp_out=$(ProjectDir)\..\..\src\protobufs $(ProjectDir)\..\..\src\protobufs\%(Filename).proto</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectDir)\..\..\src\protobufs\%(Filename).pb.h;$(ProjectDir)\..\..\src\protobufs\%(Filename).pb.cc</Outputs>
+    </CustomBuild>
+    <None Include="mosh.ico" />
+    <None Include="small.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\crypto\ae.h" />
+    <ClInclude Include="..\..\src\crypto\base64.h" />
+    <ClInclude Include="..\..\src\crypto\byteorder.h" />
+    <ClInclude Include="..\..\src\crypto\crypto.h" />
+    <ClInclude Include="..\..\src\crypto\prng.h" />
+    <ClInclude Include="..\..\src\network\compressor.h" />
+    <ClInclude Include="..\..\src\network\network.h" />
+    <ClInclude Include="..\..\src\network\networktransport.h" />
+    <ClInclude Include="..\..\src\network\transportfragment.h" />
+    <ClInclude Include="..\..\src\network\transportsender.h" />
+    <ClInclude Include="..\..\src\network\transportstate.h" />
+    <ClInclude Include="..\..\src\protobufs\hostinput.pb.h" />
+    <ClInclude Include="..\..\src\protobufs\transportinstruction.pb.h" />
+    <ClInclude Include="..\..\src\protobufs\userinput.pb.h" />
+    <ClInclude Include="..\..\src\statesync\completeterminal.h" />
+    <ClInclude Include="..\..\src\statesync\user.h" />
+    <ClInclude Include="..\..\src\terminal\parser.h" />
+    <ClInclude Include="..\..\src\terminal\parseraction.h" />
+    <ClInclude Include="..\..\src\terminal\parserstate.h" />
+    <ClInclude Include="..\..\src\terminal\parserstatefamily.h" />
+    <ClInclude Include="..\..\src\terminal\parsertransition.h" />
+    <ClInclude Include="..\..\src\terminal\terminal.h" />
+    <ClInclude Include="..\..\src\terminal\terminaldispatcher.h" />
+    <ClInclude Include="..\..\src\terminal\terminaldisplay.h" />
+    <ClInclude Include="..\..\src\terminal\terminalframebuffer.h" />
+    <ClInclude Include="..\..\src\terminal\terminaluserinput.h" />
+    <ClInclude Include="..\..\src\util\dos_assert.h" />
+    <ClInclude Include="..\..\src\util\fatal_assert.h" />
+    <ClInclude Include="..\..\src\util\locale_utils.h" />
+    <ClInclude Include="..\..\src\util\select.h" />
+    <ClInclude Include="..\..\src\util\swrite.h" />
+    <ClInclude Include="..\..\src\util\timestamp.h" />
+    <ClInclude Include="config.h" />
+    <ClInclude Include="mosh.h" />
+    <ClInclude Include="Resource.h" />
+    <ClInclude Include="stmclient.h" />
+    <ClInclude Include="sys\ioctl.h" />
+    <ClInclude Include="sys\select.h" />
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="terminaloverlay.h" />
+    <ClInclude Include="xterm_colorcodes.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\crypto\base64.cc" />
+    <ClCompile Include="..\..\src\crypto\crypto.cc" />
+    <ClCompile Include="..\..\src\crypto\ocb.cc" />
+    <ClCompile Include="..\..\src\network\compressor.cc" />
+    <ClCompile Include="..\..\src\network\network.cc" />
+    <ClCompile Include="..\..\src\network\networktransport.cc" />
+    <ClCompile Include="..\..\src\network\transportfragment.cc" />
+    <ClCompile Include="..\..\src\network\transportsender.cc" />
+    <ClCompile Include="..\..\src\protobufs\hostinput.pb.cc" />
+    <ClCompile Include="..\..\src\protobufs\transportinstruction.pb.cc" />
+    <ClCompile Include="..\..\src\protobufs\userinput.pb.cc" />
+    <ClCompile Include="..\..\src\statesync\completeterminal.cc" />
+    <ClCompile Include="..\..\src\statesync\user.cc" />
+    <ClCompile Include="..\..\src\terminal\parser.cc" />
+    <ClCompile Include="..\..\src\terminal\parseraction.cc" />
+    <ClCompile Include="..\..\src\terminal\parserstate.cc" />
+    <ClCompile Include="..\..\src\terminal\terminal.cc" />
+    <ClCompile Include="..\..\src\terminal\terminaldispatcher.cc" />
+    <ClCompile Include="..\..\src\terminal\terminaldisplay.cc" />
+    <ClCompile Include="..\..\src\terminal\terminaldisplayinit.cc" />
+    <ClCompile Include="..\..\src\terminal\terminalframebuffer.cc" />
+    <ClCompile Include="..\..\src\terminal\terminalfunctions.cc" />
+    <ClCompile Include="..\..\src\terminal\terminaluserinput.cc" />
+    <ClCompile Include="..\..\src\util\locale_utils.cc" />
+    <ClCompile Include="..\..\src\util\select.cc" />
+    <ClCompile Include="..\..\src\util\swrite.cc" />
+    <ClCompile Include="..\..\src\util\timestamp.cc" />
+    <ClCompile Include="mosh.cpp" />
+    <ClCompile Include="stmclient.cc" />
+    <ClCompile Include="terminaloverlay.cc" />
+    <ClCompile Include="wcwidth.cc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="mosh.rc" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

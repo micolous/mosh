@@ -72,7 +72,9 @@ private:
     FD_ZERO( &error_fds );
 
     clear_got_signal();
+#ifndef WIN32
     fatal_assert( 0 == sigemptyset( &empty_sigset ) );
+#endif
   }
 
   void clear_got_signal( void )
@@ -103,6 +105,8 @@ public:
     fatal_assert( signum >= 0 );
     fatal_assert( signum <= MAX_SIGNAL_NUMBER );
 
+#ifndef WIN32
+
     /* Block the signal so we don't get it outside of pselect(). */
     sigset_t to_block;
     fatal_assert( 0 == sigemptyset( &to_block ) );
@@ -116,6 +120,7 @@ public:
     sa.sa_handler = &handle_signal;
     fatal_assert( 0 == sigfillset( &sa.sa_mask ) );
     fatal_assert( 0 == sigaction( signum, &sa, NULL ) );
+#endif
   }
 
   int select( int timeout )
@@ -125,6 +130,17 @@ public:
     clear_got_signal();
     got_any_signal = 0;
 
+#ifdef WIN32
+	struct timeval ts;
+	struct timeval *tsp = NULL;
+    
+	if ( timeout >= 0 ) {
+      // timeout in milliseconds
+      ts.tv_sec  = timeout / 1000;
+      ts.tv_usec = 1000 * (long( timeout ) % 1000);
+      tsp = &ts;
+    }
+#else
     struct timespec ts;
     struct timespec *tsp = NULL;
 
@@ -134,10 +150,13 @@ public:
       ts.tv_nsec = 1000000 * (long( timeout ) % 1000);
       tsp = &ts;
     }
+#endif
     // negative timeout means wait forever
-
+#ifdef WIN32
+    int ret = ::select( max_fd + 1, &read_fds, NULL, &error_fds, tsp );
+#else
     int ret = ::pselect( max_fd + 1, &read_fds, NULL, &error_fds, tsp, &empty_sigset );
-
+#endif
     if ( ( ret == -1 ) && ( errno == EINTR ) ) {
       /* The user should process events as usual. */
       FD_ZERO( &read_fds );

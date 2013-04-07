@@ -118,7 +118,11 @@
 #endif
 
 #if _MSC_VER
+#ifdef WIN32
+	static inline unsigned ntz(unsigned x) {_BitScanForward((unsigned long*)&x,x);return x;}
+#else
 	static inline unsigned ntz(unsigned x) {_BitScanForward(&x,x);return x;}
+#endif
 #elif HAVE_DECL___BUILTIN_CTZ
 	#define ntz(x)     __builtin_ctz((unsigned)(x))   /* GCC 3.4+ */
 #else

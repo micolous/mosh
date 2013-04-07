@@ -32,6 +32,12 @@
 
 #include "config.h"
 
+#ifdef WIN32
+#include <WinSock2.h>
+#include <Windows.h>
+#include <Ws2tcpip.h>
+typedef int socklen_t;
+#else
 #include <sys/types.h>
 #include <sys/socket.h>
 #ifdef HAVE_SYS_UIO_H
@@ -39,6 +45,7 @@
 #endif
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#endif
 #include <assert.h>
 #include <errno.h>
 #include <unistd.h>
@@ -162,11 +169,13 @@ Connection::Socket::Socket()
   }
 #endif
 
+#ifndef WIN32
   //  int dscp = 0x92; /* OS X does not have IPTOS_DSCP_AF42 constant */
   int dscp = 0x02; /* ECN-capable transport only */
   if ( setsockopt( _fd, IPPROTO_IP, IP_TOS, &dscp, sizeof (dscp)) < 0 ) {
     //    perror( "setsockopt( IP_TOS )" );
   }
+#endif
 
   /* request explicit congestion notification on received datagrams */
 #ifdef HAVE_IP_RECVTOS
@@ -242,7 +251,11 @@ Connection::Connection( const char *desired_ip, const char *desired_port ) /* se
 
   if ( desired_ip ) {
     struct in_addr sin_addr;
+#ifdef WIN32
+	if ( InetPtonA(AF_INET, desired_ip, &sin_addr) == 0 ) {
+#else
     if ( inet_aton( desired_ip, &sin_addr ) == 0 ) {
+#endif
       throw NetworkException( "Invalid IP address", errno );
     }
     desired_ip_addr = sin_addr.s_addr;
@@ -333,7 +346,11 @@ Connection::Connection( const char *key_str, const char *ip, int port ) /* clien
   /* associate socket with remote host and port */
   remote_addr.sin_family = AF_INET;
   remote_addr.sin_port = htons( port );
+#ifdef WIN32
+  if ( !InetPtonA( AF_INET, ip, &remote_addr.sin_addr ) ) {
+#else
   if ( !inet_aton( ip, &remote_addr.sin_addr ) ) {
+#endif
     int saved_errno = errno;
     char buffer[ 2048 ];
     snprintf( buffer, 2048, "Bad IP address (%s)", ip );
@@ -342,6 +359,126 @@ Connection::Connection( const char *key_str, const char *ip, int port ) /* clien
 
   has_remote_addr = true;
 }
+
+#ifdef WIN32
+
+// msghdr, sendmsg, recvmsg workaround
+struct iovec
+  {
+    void *iov_base; /* Pointer to data.  */
+    size_t iov_len; /* Length of data.  */
+  };
+
+struct msghdr
+  {
+    void *msg_name;     /* Address to send to/receive from.  */
+    socklen_t msg_namelen;  /* Length of address data.  */
+
+    struct iovec *msg_iov;  /* Vector of data to send/receive into.  */
+    size_t msg_iovlen;      /* Number of elements in the vector.  */
+
+    void *msg_control;      /* Ancillary data (eg BSD filedesc passing). */
+    size_t msg_controllen;  /* Ancillary data buffer length.
+                   !! The type should be socklen_t but the
+                   definition of the kernel is incompatible
+                   with this.  */
+
+    int msg_flags;      /* Flags on received message.  */
+  };
+
+
+ssize_t fake_recvmsg(int sd, struct msghdr *msg, int flags)
+{
+	ssize_t bytes_read;
+	size_t expected_recv_size;
+	ssize_t left2move;
+	char *tmp_buf;
+	char *tmp;
+	int i;
+
+	assert(msg->msg_iov);
+
+	expected_recv_size = 0;
+	for(i = 0; i < msg->msg_iovlen; i++)
+		expected_recv_size += msg->msg_iov[i].iov_len;
+	tmp_buf = (char*) malloc(expected_recv_size);
+	if(!tmp_buf)
+		return -1;
+
+	left2move = bytes_read = recvfrom(sd,
+		tmp_buf,
+		expected_recv_size,
+		flags,
+		(struct sockaddr *)msg->msg_name,
+		&msg->msg_namelen
+		);
+
+	for(tmp = tmp_buf, i = 0; i < msg->msg_iovlen; i++)
+	{
+		if(left2move <= 0) break;
+		assert(msg->msg_iov[i].iov_base);
+		memcpy(
+			msg->msg_iov[i].iov_base,
+			tmp,
+			min(msg->msg_iov[i].iov_len,left2move)
+			);
+		left2move -= msg->msg_iov[i].iov_len;
+		tmp += msg->msg_iov[i].iov_len;
+	}
+
+	free(tmp_buf);
+
+	return bytes_read;
+}
+
+
+
+ssize_t fake_sendmsg(int sd, struct msghdr *msg, int flags)
+{
+	ssize_t bytes_send;
+	size_t expected_send_size;
+	size_t left2move;
+	char *tmp_buf;
+	char *tmp;
+	int i;
+
+	assert(msg->msg_iov);
+
+	expected_send_size = 0;
+	for(i = 0; i < msg->msg_iovlen; i++)
+		expected_send_size += msg->msg_iov[i].iov_len;
+	tmp_buf = (char*)malloc(expected_send_size);
+	if(!tmp_buf)
+		return -1;
+
+	for(tmp = tmp_buf, left2move = expected_send_size, i = 0; i <
+		msg->msg_iovlen; i++)
+	{
+		if(left2move <= 0) break;
+		assert(msg->msg_iov[i].iov_base);
+		memcpy(
+			tmp,
+			msg->msg_iov[i].iov_base,
+			min(msg->msg_iov[i].iov_len,left2move));
+		left2move -= msg->msg_iov[i].iov_len;
+		tmp += msg->msg_iov[i].iov_len;
+	}
+
+	bytes_send = sendto(sd,
+		tmp_buf,
+		expected_send_size,
+		flags,
+		(struct sockaddr *)msg->msg_name,
+		msg->msg_namelen
+		);
+
+	free(tmp_buf);
+
+	return bytes_send;
+}
+#define sendmsg fake_sendmsg
+#define recvmsg fake_recvmsg
+#endif
 
 void Connection::send( string s )
 {
@@ -353,8 +490,21 @@ void Connection::send( string s )
 
   string p = px.tostring( &session );
 
+#ifdef WIN32
+  ssize_t bytes_sent = EWOULDBLOCK;
+  fd_set one;
+  FD_ZERO(&one);
+  FD_SET(sock(), &one);
+  timeval tv;
+  tv.tv_sec = 0;
+  tv.tv_usec = 0;
+  if (select(2, NULL, &one, NULL, &tv))
+	bytes_sent = sendto( sock(), p.data(), p.size(), 0,
+			       (sockaddr *)&remote_addr, sizeof( remote_addr ) );
+#else
   ssize_t bytes_sent = sendto( sock(), p.data(), p.size(), MSG_DONTWAIT,
 			       (sockaddr *)&remote_addr, sizeof( remote_addr ) );
+#endif
 
   if ( bytes_sent == static_cast<ssize_t>( p.size() ) ) {
     have_send_exception = false;
@@ -439,7 +589,27 @@ string Connection::recv_one( int sock_to_recv, bool nonblocking )
   /* receive flags */
   header.msg_flags = 0;
 
+#ifdef WIN32
+  ssize_t received_len = -1;
+  if (nonblocking)
+  {
+	  fd_set one;
+	  FD_ZERO(&one);
+	  FD_SET(sock_to_recv, &one);
+	  TIMEVAL tv;
+	  tv.tv_sec = 0;
+	  tv.tv_usec = 0;
+	  int ret = select(1,&one, NULL, NULL, &tv);
+	  if (ret)
+		  received_len = recvmsg( sock_to_recv, &header, 0 );
+	  else
+		  received_len = EWOULDBLOCK;
+  }
+  else
+	  received_len = recvmsg( sock_to_recv, &header, 0 );
+#else
   ssize_t received_len = recvmsg( sock_to_recv, &header, nonblocking ? MSG_DONTWAIT : 0 );
+#endif
 
   if ( received_len < 0 ) {
     throw NetworkException( "recvmsg", errno );
@@ -452,6 +622,7 @@ string Connection::recv_one( int sock_to_recv, bool nonblocking )
   /* receive ECN */
   bool congestion_experienced = false;
 
+#ifndef WIN32
   struct cmsghdr *ecn_hdr = CMSG_FIRSTHDR( &header );
   if ( ecn_hdr
        && (ecn_hdr->cmsg_level == IPPROTO_IP)
@@ -464,6 +635,7 @@ string Connection::recv_one( int sock_to_recv, bool nonblocking )
       congestion_experienced = true;
     }
   }
+#endif
 
   Packet p( string( msg_payload, received_len ), &session );
 
@@ -565,7 +737,11 @@ uint16_t Network::timestamp_diff( uint16_t tsnew, uint16_t tsold )
 
 uint64_t Connection::timeout( void ) const
 {
+#ifdef WIN32
+  uint64_t RTO = uint64_t( ceil( SRTT + 4 * RTTVAR ) );
+#else
   uint64_t RTO = lrint( ceil( SRTT + 4 * RTTVAR ) );
+#endif
   if ( RTO < MIN_RTO ) {
     RTO = MIN_RTO;
   } else if ( RTO > MAX_RTO ) {
@@ -576,14 +752,23 @@ uint64_t Connection::timeout( void ) const
 
 Connection::Socket::~Socket()
 {
+#ifdef WIN32
+  if ( closesocket( _fd ) < 0 ) {
+#else
   if ( close( _fd ) < 0 ) {
+#endif
     throw NetworkException( "close", errno );
   }
 }
 
 Connection::Socket::Socket( const Socket & other )
+#ifndef WIN32
   : _fd( dup( other._fd ) )
+#endif
 {
+#ifdef WIN32
+	DuplicateHandle(GetCurrentProcess(), (HANDLE)other._fd, GetCurrentProcess(), (LPHANDLE)&_fd, 0, FALSE, DUPLICATE_SAME_ACCESS); 
+#endif
   if ( _fd < 0 ) {
     throw NetworkException( "socket", errno );
   }
@@ -591,7 +776,11 @@ Connection::Socket::Socket( const Socket & other )
 
 Connection::Socket & Connection::Socket::operator=( const Socket & other )
 {
+#ifdef WIN32
+	DuplicateHandle(GetCurrentProcess(), (HANDLE)other._fd, GetCurrentProcess(), (LPHANDLE)&_fd, 0, FALSE, DUPLICATE_SAME_ACCESS); 
+#else
   _fd = dup( other._fd );
+#endif
   
   if ( _fd < 0 ) {
     throw NetworkException( "socket", errno );

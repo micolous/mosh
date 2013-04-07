@@ -70,7 +70,11 @@ TransportSender<MyState>::TransportSender( Connection *s_connection, MyState &in
 template <class MyState>
 unsigned int TransportSender<MyState>::send_interval( void ) const
 {
+#ifdef WIN32
+  int SEND_INTERVAL = (int)( ceil( connection->get_SRTT() / 2.0 ) );
+#else
   int SEND_INTERVAL = lrint( ceil( connection->get_SRTT() / 2.0 ) );
+#endif
   if ( SEND_INTERVAL < SEND_INTERVAL_MIN ) {
     SEND_INTERVAL = SEND_INTERVAL_MIN;
   } else if ( SEND_INTERVAL > SEND_INTERVAL_MAX ) {

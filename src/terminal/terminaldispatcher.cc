@@ -40,6 +40,11 @@
 #include "parseraction.h"
 #include "terminalframebuffer.h"
 
+#ifdef WIN32
+#define snprintf sprintf_s
+#endif
+
+
 using namespace Terminal;
 
 Dispatcher::Dispatcher()

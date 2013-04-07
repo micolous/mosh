@@ -38,6 +38,9 @@
 #include "terminalframebuffer.h"
 #include "parseraction.h"
 
+#ifdef WIN32
+#define __attribute(x)
+#endif
 using namespace Terminal;
 
 /* Terminal functions -- routines activated by CSI, escape or a control char */

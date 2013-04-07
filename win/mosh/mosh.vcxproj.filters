@@ -1,0 +1,282 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="mosh">
+      <UniqueIdentifier>{71dd2591-2aae-4443-b4d1-d61dbdaca3bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mosh\util">
+      <UniqueIdentifier>{360c2c9f-a953-46b1-b044-1f6e5cd59ed6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mosh\crypto">
+      <UniqueIdentifier>{e3f1cbd6-3e43-403a-a677-1d2b1243f878}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mosh\network">
+      <UniqueIdentifier>{f2c2546d-535d-4864-a915-ac3ac8898c5d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mosh\protobufs">
+      <UniqueIdentifier>{05df4f24-2505-457f-9e7c-8d1f685b0820}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mosh\statesync">
+      <UniqueIdentifier>{3c3d2efa-0b53-47b0-97ae-4ca6693c1dfc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mosh\terminal">
+      <UniqueIdentifier>{2d73d837-0df5-4362-b6c4-4e66f2fc10ae}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="small.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="mosh.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="targetver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="mosh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="config.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\util\locale_utils.h">
+      <Filter>mosh\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\util\select.h">
+      <Filter>mosh\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\util\swrite.h">
+      <Filter>mosh\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\util\timestamp.h">
+      <Filter>mosh\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\util\dos_assert.h">
+      <Filter>mosh\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\util\fatal_assert.h">
+      <Filter>mosh\util</Filter>
+    </ClInclude>
+    <ClInclude Include="sys\ioctl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sys\select.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\crypto\byteorder.h">
+      <Filter>mosh\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\crypto\crypto.h">
+      <Filter>mosh\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\crypto\prng.h">
+      <Filter>mosh\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\crypto\ae.h">
+      <Filter>mosh\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\crypto\base64.h">
+      <Filter>mosh\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="stmclient.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\network\compressor.h">
+      <Filter>mosh\network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\network\network.h">
+      <Filter>mosh\network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\network\networktransport.h">
+      <Filter>mosh\network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\network\transportfragment.h">
+      <Filter>mosh\network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\network\transportsender.h">
+      <Filter>mosh\network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\network\transportstate.h">
+      <Filter>mosh\network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\statesync\completeterminal.h">
+      <Filter>mosh\statesync</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\statesync\user.h">
+      <Filter>mosh\statesync</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\terminal\parser.h">
+      <Filter>mosh\terminal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\terminal\parseraction.h">
+      <Filter>mosh\terminal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\terminal\parserstate.h">
+      <Filter>mosh\terminal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\terminal\parserstatefamily.h">
+      <Filter>mosh\terminal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\terminal\parsertransition.h">
+      <Filter>mosh\terminal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\terminal\terminal.h">
+      <Filter>mosh\terminal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\terminal\terminaldispatcher.h">
+      <Filter>mosh\terminal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\terminal\terminaldisplay.h">
+      <Filter>mosh\terminal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\terminal\terminalframebuffer.h">
+      <Filter>mosh\terminal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\terminal\terminaluserinput.h">
+      <Filter>mosh\terminal</Filter>
+    </ClInclude>
+    <ClInclude Include="terminaloverlay.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\protobufs\hostinput.pb.h">
+      <Filter>mosh\protobufs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\protobufs\transportinstruction.pb.h">
+      <Filter>mosh\protobufs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\protobufs\userinput.pb.h">
+      <Filter>mosh\protobufs</Filter>
+    </ClInclude>
+    <ClInclude Include="xterm_colorcodes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="mosh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\util\locale_utils.cc">
+      <Filter>mosh\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\util\select.cc">
+      <Filter>mosh\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\util\swrite.cc">
+      <Filter>mosh\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\util\timestamp.cc">
+      <Filter>mosh\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\crypto\crypto.cc">
+      <Filter>mosh\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\crypto\ocb.cc">
+      <Filter>mosh\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\crypto\base64.cc">
+      <Filter>mosh\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="stmclient.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\network\compressor.cc">
+      <Filter>mosh\network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\network\network.cc">
+      <Filter>mosh\network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\network\networktransport.cc">
+      <Filter>mosh\network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\network\transportfragment.cc">
+      <Filter>mosh\network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\network\transportsender.cc">
+      <Filter>mosh\network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\statesync\user.cc">
+      <Filter>mosh\statesync</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\statesync\completeterminal.cc">
+      <Filter>mosh\statesync</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\terminal\parseraction.cc">
+      <Filter>mosh\terminal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\terminal\parserstate.cc">
+      <Filter>mosh\terminal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\terminal\terminal.cc">
+      <Filter>mosh\terminal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\terminal\terminaldispatcher.cc">
+      <Filter>mosh\terminal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\terminal\terminaldisplay.cc">
+      <Filter>mosh\terminal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\terminal\terminalframebuffer.cc">
+      <Filter>mosh\terminal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\terminal\terminalfunctions.cc">
+      <Filter>mosh\terminal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\terminal\terminaluserinput.cc">
+      <Filter>mosh\terminal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\terminal\parser.cc">
+      <Filter>mosh\terminal</Filter>
+    </ClCompile>
+    <ClCompile Include="terminaloverlay.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\protobufs\hostinput.pb.cc">
+      <Filter>mosh\protobufs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\protobufs\transportinstruction.pb.cc">
+      <Filter>mosh\protobufs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\protobufs\userinput.pb.cc">
+      <Filter>mosh\protobufs</Filter>
+    </ClCompile>
+    <ClCompile Include="wcwidth.cc">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\terminal\terminaldisplayinit.cc">
+      <Filter>mosh\terminal</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="mosh.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\..\src\protobufs\transportinstruction.proto">
+      <Filter>mosh\protobufs</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\protobufs\userinput.proto">
+      <Filter>mosh\protobufs</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\protobufs\hostinput.proto">
+      <Filter>mosh\protobufs</Filter>
+    </CustomBuild>
+  </ItemGroup>
+</Project>

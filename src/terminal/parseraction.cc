@@ -36,6 +36,10 @@
 #include "parseraction.h"
 #include "terminal.h"
 
+#ifdef WIN32
+#define snprintf sprintf_s
+#endif
+
 using namespace Parser;
 
 std::string Action::str( void )
@@ -43,7 +47,11 @@ std::string Action::str( void )
   char thechar[ 10 ] = { 0 };
   if ( char_present ) {
     if ( iswprint( ch ) )
+#ifdef WIN32
+      snprintf( thechar, 10, "(%C)", ch );
+#else
       snprintf( thechar, 10, "(%lc)", ch );
+#endif
     else
       snprintf( thechar, 10, "(0x%x)", (unsigned int)ch );
   }

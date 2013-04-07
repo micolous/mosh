@@ -58,6 +58,9 @@ const string LocaleVar::str( void ) const
 
 const LocaleVar get_ctype( void )
 {
+#ifdef WIN32
+	return LocaleVar( "LC_ALL", "en_US.utf-8");
+#else
   /* Reimplement the search logic, just for diagnostics */
   if ( const char *all = getenv( "LC_ALL" ) ) {
     return LocaleVar( "LC_ALL", all );
@@ -68,10 +71,14 @@ const LocaleVar get_ctype( void )
   } else {
     return LocaleVar( "", "" );
   }
+#endif
 }
 
 const char *locale_charset( void )
 {
+#ifdef WIN32
+	return "utf-8";
+#else
   static const char ASCII_name[] = "US-ASCII";
 
   /* Produce more pleasant name of US-ASCII */
@@ -82,6 +89,7 @@ const char *locale_charset( void )
   }
 
   return ret;
+#endif
 }
 
 bool is_utf8_locale( void ) {
@@ -112,6 +120,7 @@ void set_native_locale( void ) {
 }
 
 void clear_locale_variables( void ) {
+#ifndef WIN32
   unsetenv( "LANG" );
   unsetenv( "LANGUAGE" );
   unsetenv( "LC_CTYPE" );
@@ -127,4 +136,5 @@ void clear_locale_variables( void ) {
   unsetenv( "LC_MEASUREMENT" );
   unsetenv( "LC_IDENTIFICATION" );
   unsetenv( "LC_ALL" );
+#endif
 }

@@ -78,6 +78,67 @@ Parser::UTF8Parser::UTF8Parser()
   assert( BUF_SIZE >= (size_t)MB_CUR_MAX );
 }
 
+#ifdef WIN32
+size_t fake_mbrtowc(
+   wchar_t *wchar,
+   const char *mbchar,
+   size_t count,
+   mbstate_t *mbstate
+)
+{
+	if (count == 0)
+		return (size_t)-2;
+	// assume utf8
+	if (*mbchar == 0)
+		return 0;
+	if ((*mbchar & 0x80) == 0)
+	{
+		if (wchar)
+			*wchar = *mbchar;
+		return 1;
+	}
+	if ((*mbchar & 0xC0) == 0x80)
+		return -1;
+	wchar_t v = 0;
+	if ((*mbchar & 0xE0) == 0xC0)
+	{
+		if (count == 1)
+			return -2;
+		v = *mbchar & 0x3f;
+		v *= 0x40;
+		mbchar ++;
+		if ((*mbchar & 0xC0) != 0x80)
+			return -1;
+		v += *mbchar & 0x3f;
+		if (wchar)
+			*wchar = v;
+		return 2;
+	}
+	if ((*mbchar & 0xF0) == 0xE0)
+	{
+		if (count == 1)
+			return -2;
+		v = *mbchar & 0x0F;
+		v *= 0x40;
+		mbchar ++;
+		if ((*mbchar & 0xC0) != 0x80)
+			return -1;
+		v += *mbchar & 0x3f;
+		if (count == 2)
+			return -2;
+		v *= 0x40;
+		mbchar ++;
+		if ((*mbchar & 0xC0) != 0x80)
+			return -1;
+		v += *mbchar & 0x3f;
+		if (wchar)
+			*wchar = v;
+		return 3;
+	}
+	return -(size_t)1;
+}
+#endif
+
 std::list<Parser::Action *> Parser::UTF8Parser::input( char c )
 {
   assert( buf_len < BUF_SIZE );
@@ -100,7 +161,11 @@ std::list<Parser::Action *> Parser::UTF8Parser::input( char c )
   while ( total_bytes_parsed != orig_buf_len ) {
     assert( total_bytes_parsed < orig_buf_len );
     assert( buf_len > 0 );
+#ifdef WIN32
+    size_t bytes_parsed = fake_mbrtowc( &pwc, buf, buf_len, &ps );
+#else
     size_t bytes_parsed = mbrtowc( &pwc, buf, buf_len, &ps );
+#endif
 
     /* this returns 0 when n = 0! */
 

@@ -32,7 +32,8 @@
 
 #ifndef SWRITE_HPP
 #define SWRITE_HPP
-
+#ifndef WIN32
 int swrite( int fd, const char *str, ssize_t len = -1 );
+#endif
 
 #endif

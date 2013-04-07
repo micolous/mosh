@@ -41,14 +41,26 @@
 static void dos_detected( const char *expression, const char *file, int line, const char *function )
 {
   char buffer[ 2048 ];
+#ifdef WIN32
+  sprintf_s( buffer, 2048, "Illegal counterparty input (possible denial of service) in function %s at %s:%d, failed test: %s\n",
+	    function, file, line, expression );
+#else
   snprintf( buffer, 2048, "Illegal counterparty input (possible denial of service) in function %s at %s:%d, failed test: %s\n",
 	    function, file, line, expression );
+#endif
   throw Crypto::CryptoException( buffer );
 }
 
+#ifdef WIN32
+#define dos_assert(expr)						\
+  ((expr)								\
+   ? (void)0								\
+   : dos_detected (#expr, __FILE__, __LINE__, __FUNCTION__ ))
+#else
 #define dos_assert(expr)						\
   ((expr)								\
    ? (void)0								\
    : dos_detected (#expr, __FILE__, __LINE__, __func__ ))
 
+#endif
 #endif

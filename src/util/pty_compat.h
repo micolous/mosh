@@ -33,6 +33,10 @@
 #ifndef PTY_COMPAT_HPP
 #define PTY_COMPAT_HPP
 
+#ifdef WIN32
+#error do not include me
+#endif
+
 #include "config.h"
 
 #ifndef HAVE_FORKPTY

@@ -36,6 +36,7 @@
 
 #include "swrite.h"
 
+#ifndef WIN32
 int swrite( int fd, const char *str, ssize_t len )
 {
   ssize_t total_bytes_written = 0;
@@ -53,3 +54,4 @@ int swrite( int fd, const char *str, ssize_t len )
 
   return 0;
 }
+#endif

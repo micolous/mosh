@@ -35,6 +35,10 @@
 
 #include "terminalframebuffer.h"
 
+#ifdef WIN32
+#define snprintf sprintf_s
+#endif
+
 using namespace Terminal;
 
 void Cell::reset( int background_color )
@@ -585,8 +589,13 @@ bool Cell::compare( const Cell &other ) const
 
   if ( !contents_match( other ) ) {
     ret = true;
+#ifdef WIN32
+    fprintf( stderr, "Contents: %C vs. %C\n",
+	     debug_contents(), other.debug_contents() );
+#else
     fprintf( stderr, "Contents: %lc vs. %lc\n",
 	     debug_contents(), other.debug_contents() );
+#endif
   }
 
   if ( fallback != other.fallback ) {

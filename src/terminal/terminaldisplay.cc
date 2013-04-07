@@ -34,6 +34,10 @@
 
 #include "terminaldisplay.h"
 
+#ifdef WIN32
+#define snprintf sprintf_s
+#endif
+
 using namespace Terminal;
 
 /* Print a new "frame" to the terminal, using ANSI/ECMA-48 escape codes. */
@@ -78,7 +82,11 @@ std::string Display::new_frame( bool initialized, const Framebuffer &last, const
       for ( std::deque<wchar_t>::const_iterator i = window_title.begin();
             i != window_title.end();
             i++ ) {
+#ifdef WIN32
+	snprintf( tmp, 64, "%C", *i );
+#else
 	snprintf( tmp, 64, "%lc", *i );
+#endif
 	frame.append( tmp );
       }
       frame.append( "\007" );
@@ -90,7 +98,11 @@ std::string Display::new_frame( bool initialized, const Framebuffer &last, const
       for ( std::deque<wchar_t>::const_iterator i = icon_name.begin();
 	    i != icon_name.end();
 	    i++ ) {
+#ifdef WIN32
+	snprintf( tmp, 64, "%C", *i );
+#else
 	snprintf( tmp, 64, "%lc", *i );
+#endif
 	frame.append( tmp );
       }
       frame.append( "\007" );
@@ -100,7 +112,11 @@ std::string Display::new_frame( bool initialized, const Framebuffer &last, const
       for ( std::deque<wchar_t>::const_iterator i = window_title.begin();
 	    i != window_title.end();
 	    i++ ) {
+#ifdef WIN32
+	snprintf( tmp, 64, "%C", *i );
+#else
 	snprintf( tmp, 64, "%lc", *i );
+#endif
 	frame.append( tmp );
       }
       frame.append( "\007" );
@@ -371,7 +387,11 @@ void Display::put_cell( bool initialized, FrameState &frame, const Framebuffer &
   for ( std::vector<wchar_t>::const_iterator i = cell->contents.begin();
 	i != cell->contents.end();
 	i++ ) {
+#ifdef WIN32
+    snprintf( tmp, 64, "%C", *i );
+#else
     snprintf( tmp, 64, "%lc", *i );
+#endif
     frame.append( tmp );
   }
 

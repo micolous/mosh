@@ -53,6 +53,8 @@
 #elif defined HAVE_CURSES_H
 #  include <curses.h>
 #  include <term.h>
+#elif defined WIN32
+// nothing
 #else
 #  error "SysV or X/Open-compatible Curses header file required"
 #endif
@@ -61,6 +63,7 @@
 
 using namespace Terminal;
 
+#ifndef WIN32
 bool Display::ti_flag( const char *capname ) const
 {
   int val = tigetflag( const_cast<char *>( capname ) );
@@ -87,11 +90,13 @@ const char *Display::ti_str( const char *capname ) const
   }
   return val;
 }
+#endif
 
 Display::Display( bool use_environment )
   : has_ech( true ), has_bce( true ), has_title( true ), posterize_colors( false ), smcup( NULL ), rmcup( NULL )
 {
   if ( use_environment ) {
+#ifndef WIN32
     int errret = -2;
     int ret = setupterm( (char *)0, 1, &errret );
 
@@ -150,5 +155,9 @@ Display::Display( bool use_environment )
       smcup = ti_str("smcup");
       rmcup = ti_str("rmcup");
     }
+#else
+	has_title = true;
+#endif
+
   }
 }

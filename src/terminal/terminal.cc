@@ -56,6 +56,9 @@ void Emulator::execute( const Parser::Execute *act )
 {
   dispatch.dispatch( CONTROL, act, &fb );
 }
+#ifdef WIN32
+int wcwidth(wchar_t wc);
+#endif
 
 void Emulator::print( const Parser::Print *act )
 {
