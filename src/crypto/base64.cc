@@ -92,7 +92,7 @@ bool base64_decode( const char *b64, const size_t b64_len,
 }
 
 void base64_encode( const char *raw, const size_t raw_len,
-		    char *b64, const size_t b64_len )
+		    char *b64, size_t b64_len )
 {
   fatal_assert( b64_len == 24 ); /* only useful for Mosh keys */
   fatal_assert( raw_len == 16 );
