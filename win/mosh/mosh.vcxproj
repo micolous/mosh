@@ -53,14 +53,14 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\work\protobuf-2.5.0\vsprojects\include;.;../../src/util;zlib;../../src/crypto;..\..\src\protobufs;../../src/terminal;../../src/statesync;../../src/network</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>ZLIB_WINAPI;WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\protobuf-2.5.0\src;.;../../src/util;zlib;../../src/crypto;..\..\src\protobufs;../../src/terminal;../../src/statesync;../../src/network</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>ws2_32.lib;libprotobuf.lib;zlib.lib;libeay32MTd.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>D:\work\protobuf-2.5.0\vsprojects\Debug;zlib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>ws2_32.lib;libprotobuf.lib;zlibwapi.lib;libeay32MTd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\protobuf-2.5.0\vsprojects\Debug;.\zlib\contrib\vstudio\vc10\x86\ZlibDllDebug</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -70,38 +70,38 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\work\protobuf-2.5.0\vsprojects\include;.;../../src/util;zlib;../../src/crypto;..\..\src\protobufs;../../src/terminal;../../src/statesync;../../src/network</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>ZLIB_WINAPI;WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\protobuf-2.5.0\src;.;../../src/util;zlib;../../src/crypto;..\..\src\protobufs;../../src/terminal;../../src/statesync;../../src/network</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>D:\work\protobuf-2.5.0\vsprojects\Release;zlib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>ws2_32.lib;libprotobuf.lib;zlib.lib;libeay32MTd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\protobuf-2.5.0\vsprojects\Release;.\zlib\contrib\vstudio\vc10\x86\ZlibDllRelease</AdditionalLibraryDirectories>
+      <AdditionalDependencies>ws2_32.lib;libprotobuf.lib;zlibwapi.lib;libeay32MTd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <CustomBuild Include="..\..\src\protobufs\hostinput.proto">
       <FileType>Document</FileType>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">protobuf\protoc --proto_path=$(ProjectDir)\..\..\src\protobufs --cpp_out=$(ProjectDir)\..\..\src\protobufs $(ProjectDir)\..\..\src\protobufs\%(Filename).proto</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectDir)\..\..\protobuf-2.5.0\vsprojects\Debug\protoc --proto_path=$(ProjectDir)\..\..\src\protobufs --cpp_out=$(ProjectDir)\..\..\src\protobufs $(ProjectDir)\..\..\src\protobufs\%(Filename).proto</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectDir)\..\..\src\protobufs\%(Filename).pb.h;$(ProjectDir)\..\..\src\protobufs\%(Filename).pb.cc</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">protobuf\protoc --proto_path=$(ProjectDir)\..\..\src\protobufs --cpp_out=$(ProjectDir)\..\..\src\protobufs $(ProjectDir)\..\..\src\protobufs\%(Filename).proto</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectDir)\..\..\protobuf-2.5.0\vsprojects\Release\protoc --proto_path=$(ProjectDir)\..\..\src\protobufs --cpp_out=$(ProjectDir)\..\..\src\protobufs $(ProjectDir)\..\..\src\protobufs\%(Filename).proto</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectDir)\..\..\src\protobufs\%(Filename).pb.h;$(ProjectDir)\..\..\src\protobufs\%(Filename).pb.cc</Outputs>
     </CustomBuild>
     <CustomBuild Include="..\..\src\protobufs\transportinstruction.proto">
       <FileType>Document</FileType>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">protobuf\protoc --proto_path=$(ProjectDir)\..\..\src\protobufs --cpp_out=$(ProjectDir)\..\..\src\protobufs $(ProjectDir)\..\..\src\protobufs\%(Filename).proto</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectDir)\..\..\protobuf-2.5.0\vsprojects\Debug\protoc --proto_path=$(ProjectDir)\..\..\src\protobufs --cpp_out=$(ProjectDir)\..\..\src\protobufs $(ProjectDir)\..\..\src\protobufs\%(Filename).proto</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectDir)\..\..\src\protobufs\%(Filename).pb.h;$(ProjectDir)\..\..\src\protobufs\%(Filename).pb.cc</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">protobuf\protoc --proto_path=$(ProjectDir)\..\..\src\protobufs --cpp_out=$(ProjectDir)\..\..\src\protobufs $(ProjectDir)\..\..\src\protobufs\%(Filename).proto</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectDir)\..\..\protobuf-2.5.0\vsprojects\Release\protoc --proto_path=$(ProjectDir)\..\..\src\protobufs --cpp_out=$(ProjectDir)\..\..\src\protobufs $(ProjectDir)\..\..\src\protobufs\%(Filename).proto</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectDir)\..\..\src\protobufs\%(Filename).pb.h;$(ProjectDir)\..\..\src\protobufs\%(Filename).pb.cc</Outputs>
     </CustomBuild>
     <CustomBuild Include="..\..\src\protobufs\userinput.proto">
       <FileType>Document</FileType>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">protobuf\protoc --proto_path=$(ProjectDir)\..\..\src\protobufs --cpp_out=$(ProjectDir)\..\..\src\protobufs $(ProjectDir)\..\..\src\protobufs\%(Filename).proto</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectDir)\..\..\protobuf-2.5.0\vsprojects\Debug\protoc --proto_path=$(ProjectDir)\..\..\src\protobufs --cpp_out=$(ProjectDir)\..\..\src\protobufs $(ProjectDir)\..\..\src\protobufs\%(Filename).proto</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectDir)\..\..\src\protobufs\%(Filename).pb.h;$(ProjectDir)\..\..\src\protobufs\%(Filename).pb.cc</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">protobuf\protoc --proto_path=$(ProjectDir)\..\..\src\protobufs --cpp_out=$(ProjectDir)\..\..\src\protobufs $(ProjectDir)\..\..\src\protobufs\%(Filename).proto</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectDir)\..\..\protobuf-2.5.0\vsprojects\Release\protoc --proto_path=$(ProjectDir)\..\..\src\protobufs --cpp_out=$(ProjectDir)\..\..\src\protobufs $(ProjectDir)\..\..\src\protobufs\%(Filename).proto</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectDir)\..\..\src\protobufs\%(Filename).pb.h;$(ProjectDir)\..\..\src\protobufs\%(Filename).pb.cc</Outputs>
     </CustomBuild>
     <None Include="mosh.ico" />
