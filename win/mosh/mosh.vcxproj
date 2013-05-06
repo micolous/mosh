@@ -53,15 +53,19 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>ZLIB_WINAPI;WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\protobuf-2.5.0\src;.;../../src/util;zlib;../../src/crypto;..\..\src\protobufs;../../src/terminal;../../src/statesync;../../src/network</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\protobuf-2.5.0\src;.;../../src/util;zlib/build/install/include;../../src/crypto;..\..\src\protobufs;../../src/terminal;../../src/statesync;../../src/network</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>ws2_32.lib;libprotobuf.lib;zlibwapi.lib;libeay32MTd.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\..\protobuf-2.5.0\vsprojects\Debug;.\zlib\contrib\vstudio\vc10\x86\ZlibDllDebug</AdditionalLibraryDirectories>
+      <AdditionalDependencies>ws2_32.lib;libprotobuf.lib;zlib.lib;libeay32MTd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\protobuf-2.5.0\vsprojects\Debug;.\zlib\build\install\lib</AdditionalLibraryDirectories>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy /y "$(ProjectDir)/zlib/build/install/bin/zlib.dll" "$(OutDir)"
+</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -70,17 +74,20 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>ZLIB_WINAPI;WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\protobuf-2.5.0\src;.;../../src/util;zlib;../../src/crypto;..\..\src\protobufs;../../src/terminal;../../src/statesync;../../src/network</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\protobuf-2.5.0\src;.;../../src/util;zlib/build/install/include;../../src/crypto;..\..\src\protobufs;../../src/terminal;../../src/statesync;../../src/network</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>..\..\protobuf-2.5.0\vsprojects\Release;.\zlib\contrib\vstudio\vc10\x86\ZlibDllRelease</AdditionalLibraryDirectories>
-      <AdditionalDependencies>ws2_32.lib;libprotobuf.lib;zlibwapi.lib;libeay32MTd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\protobuf-2.5.0\vsprojects\Release;.\zlib\build\install\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>ws2_32.lib;libprotobuf.lib;zlib.lib;libeay32MTd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy /y "$(ProjectDir)/zlib/build/install/bin/zlib.dll" "$(OutDir)"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <CustomBuild Include="..\..\src\protobufs\hostinput.proto">
