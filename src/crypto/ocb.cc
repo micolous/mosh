@@ -91,7 +91,7 @@
 	#define inline __inline        /* MSVC doesn't recognize "inline" in C */
 	#define restrict __restrict  /* MSVC doesn't recognize "restrict" in C */
     #define __SSE2__   (_M_IX86 || _M_AMD64 || _M_X64)    /* Assume SSE2  */
-    #define __SSSE3__  (_M_IX86 || _M_AMD64 || _M_X64)    /* Assume SSSE3 */
+    //#define __SSSE3__  (_M_IX86 || _M_AMD64 || _M_X64)    /* Don't assume SSSE3 */
 	#include <intrin.h>
 	#pragma intrinsic(_byteswap_uint64, _BitScanForward, memcpy)
 #elif __GNUC__
